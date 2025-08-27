@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  nestjs-dev:
+    container_name: nestjs-dev-app
+    image: nestjs-dev:latest
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+      target: dev
+    volumes:
+      - .:/usr/src/app
+      - /usr/src/app/node_modules
+    ports:
+      - "3000:3000"
+    environment:
+      - NODE_ENV=development
+    command: pnpm run start:dev
+    restart: unless-stopped

@@ -1,0 +1,31 @@
+# Use a minimal Node.js image
+FROM node:18-slim AS deps
+
+# Use corepack without additional preparation if possible
+RUN corepack enable
+
+WORKDIR /usr/src/app
+
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile --prod
+
+# Development stage
+FROM node:18-alpine AS dev
+
+RUN corepack enable
+WORKDIR /usr/src/app
+
+# Copy package files and install all dependencies (including dev)
+COPY package.json pnpm-lock.yaml ./
+RUN pnpm install --frozen-lockfile
+
+# Copy source code
+COPY src/ ./src/
+COPY tsconfig*.json ./
+COPY nest-cli.json ./
+
+# Expose port
+EXPOSE 3000
+
+# Start in development mode with hot reload
+CMD ["pnpm", "run", "start:dev"]
