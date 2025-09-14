@@ -28,8 +28,8 @@ RUN pnpm run build
 # Production stage - Use node:18-alpine
 FROM node:18-alpine AS runner
 
-# Install curl for healthcheck
-RUN apk add --no-cache curl
+# Install curl and wget for healthcheck
+RUN apk add --no-cache curl wget
 
 WORKDIR /usr/src/app
 
